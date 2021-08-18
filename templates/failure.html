@@ -1,0 +1,19 @@
+{% extends "page.html" %}
+{% block title %}Transaction Failed{% endblock %}
+{% block content %}
+<div class="container-fluid" style="padding-top:2%">
+    <h3 class="text-dark mb-4">Transaction Failed</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 font-weight-bold">Transaction Info</p>
+        </div>
+        <div class="card-body">
+            <p>Sender : {{sender}}</p>
+            <p>Receiver : {{receiver}}</p>
+            <p>Amount : {{'%0.2f' % amount|float}}</p>
+            <p>Error : The sender's bank does not have sufficient funds to make this transaction. </p>
+        </div>
+        <a href="/" role="button" class="btn btn-light">Home</a>
+    </div>
+</div>
+{% endblock %}
