@@ -9,7 +9,9 @@ import re
 
 app = Flask(__name__)
 sender=""
-app.secret_key = 'TIGER'
+app.secret_key = 'Warrior320'
+
+
 
 app.config['MYSQL_HOST'] = 'sql6.freemysqlhosting.net'
 app.config['MYSQL_USER'] = 'sql6431161'
@@ -56,7 +58,7 @@ def make():
 def transact():
     if request.method == 'POST' and 'reciever' in request.form and 'amount' in request.form and 'pname' in request.form and 'pbal' in request.form:
         global sender
-        sender=request.form['pname']
+        sender=request.form['id']
         reciever = request.form['reciever']
         amount=request.form['amount']
         amount1=request.form['amount']
@@ -65,33 +67,39 @@ def transact():
         if sender==reciever:
             formEr['reciever'].append("Sender and Receiver cannot be same")
             error=True
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT curr_bal FROM customers WHERE id=%s", (reciever,))
+        if not cursor.fetchone():
+            formEr['reciever'].append("Receiver with given account number not found")
+            error=True
         if  not amount.isnumeric():
             formEr['amount'].append("Invalid Input")
             error=True
+        
         if error:
             return render_template("make.html",form=formEr,value1=request.form['pname'],value2=request.form['id'],value3=request.form['email'],value4=request.form['pbal'])
 
         amount = float(amount)
         amount1 = float(amount1)
         scurrbal = float(request.form['pbal'])
-        cursor = mysql.connection.cursor()
+        
         sbal = scurrbal - amount
-        cursor.execute("SELECT curr_bal FROM customers WHERE name=%s", (reciever,))
+        cursor.execute("SELECT curr_bal FROM customers WHERE id=%s", (reciever,))
         rcurr_bal = cursor.fetchone()
         rcurrbal = float(rcurr_bal[0])
         rbal = rcurrbal + amount1
-        cursor.execute("SELECT * FROM transactions WHERE sname=%s", (sender,))
-
-        tid = cursor.fetchall()
+        sname=request.form['pname']
+        cursor.execute("SELECT name from customers where id=%s", (reciever,))
+        rname=cursor.fetchone()[0]
         if scurrbal >= amount:
-            cursor.execute("UPDATE customers SET curr_bal=%s where name=%s", (rbal, reciever,))
-            cursor.execute("UPDATE customers SET curr_bal=%s where name=%s", (sbal, sender,))
-            cursor.execute("INSERT INTO transactions(sname,rname,amount) VALUES ( %s, %s,%s)",
-                           (sender, reciever, amount,))
+            cursor.execute("UPDATE customers SET curr_bal=%s where id=%s", (rbal, reciever,))
+            cursor.execute("UPDATE customers SET curr_bal=%s where id=%s", (sbal, sender,))
+            cursor.execute("INSERT INTO transactions(sname,rname,amount,sid,rid) VALUES ( %s, %s,%s,%s,%s)",
+                           (sname, rname, amount,sender,reciever,))
             mysql.connection.commit()
         else:
-            return render_template("failure.html",sender=sender,receiver=reciever,amount=amount)
-        return render_template("success.html",transaction='/history',sender=sender,receiver=reciever,sbal=scurrbal,rbal=rbal,amount=amount)
+            return render_template("failure.html",sender=sender,sname=sname,rname=rname,receiver=reciever,amount=amount)
+        return render_template("success.html",transaction='/history',sender=sender,receiver=reciever,sname=sname,rname=rname,sbal=scurrbal,rbal=rbal,amount=amount)
         # return render_template('transact.html',value=tid)
 
 

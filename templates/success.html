@@ -8,11 +8,33 @@
             <p class="text-primary m-0 font-weight-bold">Transaction Info</p>
         </div>
         <div class="card-body">
-            <p>Sender : {{sender}}</p>
-            <p>Receiver : {{receiver}}</p>
+            <div class="row">
+                <div class="col-md-6 card-text">
+                    Sender Account No : {{sender}}
+                </div>
+                <div class="col-md-6">
+                    Sender Name : {{sname}}
+                </div>
+            </div>
+            <p></p>
+            <div class="row">
+                <div class="col-md-6">
+                    Receiver Account No : {{receiver}}
+                </div>
+                <div class="col-md-6">
+                    Receiver Name : {{rname}}
+                </div>
+            </div>
+            <p></p>
             <p>Amount : {{'%0.2f' % amount|float}}</p>
-            <p>Sender Balance : {{'%0.2f' % sbal|float}}</p>
-            <p>Receiver Balance : {{'%0.2f' % rbal|float}}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    Sender Balance : {{'%0.2f' % sbal|float}}
+                </div>
+                <div class="col-md-6">
+                    Receiver Balance : {{'%0.2f' % rbal|float}}
+                </div>
+            </div>
         </div>
         <a href="{{transaction}}" role="button" class="btn btn-light">View Transactions</a>
     </div>

@@ -33,6 +33,7 @@
         }
         .display_table
         {
+            padding-top: 5%;
             width:100vw;
             height:100vh;
             display:flex;
@@ -43,7 +44,7 @@
         .center_div
         {
             width:90vw;
-            height:80vh;
+            height:100vh;
             background-image:url("{{ url_for('static',filename='img/2.jpg')}}");
             background-repeat:round;
             background-size:100%;
@@ -100,7 +101,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Account No.</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Amount</th>
@@ -128,7 +129,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td><strong>Id</strong></td>
+                            <td><strong>Account No.</strong></td>
                             <td><strong>Name</strong></td>
                             <td><strong>Email</strong></td>
                             <td><strong>Balance</strong></td>
