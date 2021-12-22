@@ -1,6 +1,7 @@
 import pymysql
 from flask import Flask, flash, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
 import datetime
@@ -10,14 +11,34 @@ import re
 app = Flask(__name__)
 sender=""
 app.secret_key = 'Warrior320'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# db = SQLAlchemy(app)
 
+
+# class Customers(db.Model):
+#     __tablename__='customers'
+#     id=db.Column(db.Integer, primary_key=True)
+#     name=db.Column(db.String(120))
+#     email=db.Column(db.String(20),unique=True,nullable=False)
+#     curr_bal=db.Column(db.Integer)
+#     def __repr__(self):
+#         return f"Customers('{self.id}','{self.name}','{self.email}','{self.curr_bal}')"
+
+# class Transactions(db.Model):
+#     __tablename__='transactions'
+#     id=db.Column(db.Integer,primary_key=True)
+#     sid=db.Column(db.Integer)
+#     rid=db.Column(db.Integer)
+#     sname=db.Column(db.String(120))
+#     sname=db.Column(db.String(120))
+#     amount=db.Column(db.Integer)
+#     time = db.Column(DateTime(timezone=False), default=datetime.datetime.utcnow)
 
 
 app.config['MYSQL_HOST'] = 'sql6.freemysqlhosting.net'
-app.config['MYSQL_USER'] = 'sql6431161'
-app.config['MYSQL_PASSWORD'] = 'Ipjnywh1jV'
-app.config['MYSQL_DB'] = 'sql6431161'
-# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_USER'] = 'sql6460471'
+app.config['MYSQL_PASSWORD'] = 'xQJxxs8r63'
+app.config['MYSQL_DB'] = 'sql6460471'
 
 mysql = MySQL(app)
 ts = time.time()
@@ -98,8 +119,9 @@ def transact():
                            (sname, rname, amount,sender,reciever,))
             mysql.connection.commit()
         else:
-            return render_template("failure.html",sender=sender,sname=sname,rname=rname,receiver=reciever,amount=amount)
-        return render_template("success.html",transaction='/history',sender=sender,receiver=reciever,sname=sname,rname=rname,sbal=scurrbal,rbal=rbal,amount=amount)
+            formEr['amount'].append("Insufficient Funds in Sender Account")
+            return render_template("make.html",form=formEr,value1=request.form['pname'],value2=request.form['id'],value3=request.form['email'],value4=request.form['pbal'])
+        return render_template("success.html",transaction='/history',sender=sender,receiver=reciever,sname=sname,rname=rname,sbal=(scurrbal-amount),rbal=(rbal+amount),amount=amount)
         # return render_template('transact.html',value=tid)
 
 
